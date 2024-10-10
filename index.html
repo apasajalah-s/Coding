@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CRUD Produk dengan AJAX</title>
+    <script>
+        // Fungsi untuk menambah produk dengan AJAX
+        function addProduct() {
+            var formData = new FormData(document.getElementById('productForm'));
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "create_product.php", true);
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    document.getElementById('message').innerHTML = xhr.responseText;
+                    loadProducts(); // Reload produk setelah menambah
+                }
+            };
+            xhr.send(formData);
+        }
+        // Fungsi untuk memuat daftar produk
+        function loadProducts(page = 1) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "list_products.php?page=" + page, true);
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    document.getElementById('products').innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+        // Muat produk saat halaman pertama kali dibuka
+        window.onload = function () {
+            loadProducts();
+        };
+    </script>
+</head>
+
+<body>
+    <h1>Tambah Produk</h1>
+    <form id="productForm" onsubmit="event.preventDefault(); addProduct();">
+        <input type="text" name="name" placeholder="Nama Produk" required><br>
+        <input type="text" name="price" placeholder="Harga Produk" required><br>
+        <textarea name="description" placeholder="Deskripsi Produk" required></textarea><br>
+        <button type="submit">Tambah Produk</button>
+    </form>
+    <div id="message"></div>
+    <h1>Daftar Produk</h1>
+    <div id="products"></div>
+</body>
+
+</html>
