@@ -17,6 +17,49 @@
             };
             xhr.send(formData);
         }
+        //Fungsi untuk mengedit produk
+        function editProduct(id){
+            var NIK = prompt("Masukkan NIK:");
+            var name = prompt("Masukkan nama produk:");
+            var price = prompt("Masukkan harga produk:");
+            var description=prompt("Masukkan deskripsi produk:");
+
+            if (NIK && name && price && description) {
+                var formData = new FormData();
+                formData.append("id", id);
+                formData.append("NIK", NIK);
+                formData.append("name", name);
+                formData.append("price", price);
+                formData.append("description", description);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "update_product.php", true);
+                xhr.onload = function(){
+                    if (xhr.status == 200){
+                        document.getElementById('message').innerHTML=xhr.responseText;
+                    }
+                };
+                xhr.send(formData);
+            }
+        }
+        //fungsi untuk menghapus produk
+        function deleteProduct(id) {
+                if (confirm("Anda yakin ingin menghapus produk ini?")) {
+                    var formData = new FormData();
+                    formData.append("id", id);  // pastikan id dikirim
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "delete_product.php", true);
+                    xhr.onload = function () {
+                        if (xhr.status == 200) {
+                            document.getElementById('message').innerHTML = xhr.responseText;
+                            loadProducts();  // reload daftar produk setelah menghapus
+                        }
+                    };
+                    xhr.send(formData);
+                }
+            }
+
         // Fungsi untuk memuat daftar produk
         function loadProducts(page = 1) {
             var xhr = new XMLHttpRequest();
@@ -26,6 +69,7 @@
                     document.getElementById('products').innerHTML = xhr.responseText;
                 }
             };
+
             xhr.send();
         }
         // Muat produk saat halaman pertama kali dibuka
@@ -36,16 +80,26 @@
 </head>
 
 <body>
-    <h1>Tambah Produk</h1>
+    <script></script>
+    <h1>Tambahkan Product</h1>
     <form id="productForm" onsubmit="event.preventDefault(); addProduct();">
+        <input type="text" name="nik" placeholder="NIK" required><br>
         <input type="text" name="name" placeholder="Nama Produk" required><br>
         <input type="text" name="price" placeholder="Harga Produk" required><br>
         <textarea name="description" placeholder="Deskripsi Produk" required></textarea><br>
         <button type="submit">Tambah Produk</button>
     </form>
+
     <div id="message"></div>
     <h1>Daftar Produk</h1>
     <div id="products"></div>
+
+    <!-- Tabel untuk menampilkan daftar produk -->
+    <table border="1">
+        <tbody id="productTable">
+            <!-- Isi tabel produk akan dimuat dengan JavaScript -->
+        </tbody>
+    </table>
 </body>
 
 </html>

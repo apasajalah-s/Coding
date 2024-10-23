@@ -8,6 +8,7 @@ $db = $database->getConnection();
 // Inisialisasi objek produk
 $product = new Product($db);
 // Set properti produk yang akan ditambahkan
+$product->NIK = $_POST['nik'];
 $product->name = $_POST['name'];
 $product->price = $_POST['price'];
 $product->description = $_POST['description'];
@@ -18,4 +19,3 @@ if ($product->create()) {
 } else {
     echo "Gagal menambahkan produk."; // Tampilkan pesan gagal
 }
-?>
